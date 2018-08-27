@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div id="mainContainer" class="container" >
+<br/>
+
+<input th:if="${userModel.saveoredit} eq 'save'" type="hidden" id="savedornot" data-th-attr="editid=-1" th:value="-1"/>
+<input th:if="${userModel.saveoredit} eq 'edit'" type="hidden" id="savedornot" data-th-attr="editid=${userModel.editid}" th:value="${userModel.editid}"/>
+
+<div class="font-white" >
+
+	   <div class="text-center">
+	   <input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'" type="button" class="btn btn-primary" style="display:none"  value="Switch to shift view" id="shiftview"/>
+	   <input  th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'" type="button" class="btn btn-primary" value="Switch to people view" id="peopleview"/>
+	   
+	   <input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin'" type="button" class="btn btn-primary"  value="Switch to shift view" id="shiftview"/>
+	   <input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin'" type="button" style="display:none"  class="btn btn-primary" value="Switch to people view" id="peopleview"/>
+	   
+	   <input type="button" class="btn btn-primary"  value="edit table" id="edittable" th:if="${userModel.saveoredit} eq 'edit' and ${userModel.getusername} eq 'admin'"/>
+	   <!-- 逻辑：只能改或者删人 -->
+	   <a class="btn btn-primary text-white" data-toggle="modal" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'"
+			data-target="#viewstatistics" role="button" id="statistics">view labor statistics</a><br/><br/>
+	<div class="text-center" style="margin-left:20%"><form class="form-inline">
+  <div class="form-group" th:if="${userModel.saveoredit} eq 'save'">
+    <label for="filename" > please input file name then press the button </label>
+    <input type="text" class="form-control" id="filename" name="filename" style="width:400px">
+  </div> <br/>
+  <input type="button" class="btn btn-primary" value="save work shift" id="saveworkshift" th:if="${userModel.saveoredit} eq 'save'">
+</form>
+	   </div>
+</div>
+<!-- The modal -->
+<div class="modal fade" id="viewstatistics" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalLabel">labor statistics</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+			</div>
+			<div class="modal-body" id="userFormContainer">
+			Overall Statistics
+			<div th:text="'total work hours:'+${userModel.totalHours}"></div>
+			<div th:text="'work hours per capita:'+${userModel.hoursperemp}"></div>
+			<div th:text="'per capita daily work hours:'+${userModel.hoursperempday}"></div>
+			<div th:text="'total shift numbers:'+${userModel.totalShifts}"></div>
+			<div th:text="'shift numbers per capita:'+${userModel.shiftsperemp}"></div>
+			<div th:text="'per capita daily shift numbers:'+${userModel.shiftsperempday}"></div>
+			<br/>
+			Employee Statistics
+			 <table class="table table-striped text-nowrap"  >	
+			
+					<tr th:each="u,uStat : ${userModel.userhour}">		
+					<td  th:text="${u.name}+'  '"></td>
+					<td  th:text="${u.hours}+' hours '"></td>
+					<td  th:text="${u.shift}+' shifts '"></td>
+					
+					</tr>
+			
+
+		</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div id="mainContainerRepleace" class="row">
+	<div class="text-center" style="width:100%">
+	<div class="text-center" th:if="${userModel.laborlaw} neq 'false' and ${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'" th:text="${userModel.laborlaw}" style="color:red"/>
+	<br/></div>  <div class="table-responsive">
+		 <table th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'" id="table1" class="table table-striped text-nowrap " style="font-size:10px" >		 
+			<thead>  
+				<tr class="text-center">
+				    <th style="width:200px"></th>
+					<th th:each="shift,shiftStat : ${userModel.shiftlist}"><span th:text="${shift.name}" th:id="shift+${shiftStat.index}"></span><br/>
+					<div style="dispaly:none" id="shiftsize" data-th-attr="size=${shiftStat.size}"/>	
+					</th>
+				</tr>
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.shiftview}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td style="width:200px" th:text="${dates.key}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates.key,0,4),#strings.substring(dates.key,5,7),#strings.substring(dates.key,8,10)))}" data-th-attr="date=${dates.key}" th:id="dateid+${datesStat.index}">
+					</td>
+					
+					<td th:each="shift1,shift1Stat : ${userModel.shiftlist}" style="border:1px solid gray;padding:1px"
+					th:id="date+${datesStat.index}+shift+${shift1Stat.index}">
+					<span th:each="shift2,shift2Stat : ${userModel.shiftview['__${dates.key}__']}" >
+					<span th:if="${shift1.name} eq ${shift2.key}" th:each="username,usernameStat:${shift2.value}" >
+					<span th:text="'&nbsp'+${username}+'&nbsp'" class="badge badge-success badge-pill" style="margin:2px"></span><br th:if="${usernameStat.index}%4==3"/>
+					</span>
+					</span>
+					</td>
+					</tr>
+			</tbody>
+
+		</table>
+		<table th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'" id="table2" class="table table-striped text-nowrap" style="font-size:10px;display:none" >		 
+			<thead>  
+				<tr class="text-center">
+				    <th style="width:200px"></th>
+					<th th:each="user,userStat : ${userModel.userlist}"><span th:text="${user.name}"></span><br/>
+					<div style="dispaly:none" id="usersize" data-th-attr="size=${userStat.size}"/>	
+					</th>
+				</tr>
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.peopleview}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td style="width:200px" th:text="${dates.key}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates.key,0,4),#strings.substring(dates.key,5,7),#strings.substring(dates.key,8,10)))}" data-th-attr="date=${dates.key}" th:id="dateid+${datesStat.index}"></td>
+					
+					<td th:each="user1,user1Stat : ${userModel.userlist}" style="border:1px solid gray;padding:1px">
+					<span th:each="user2,user2Stat : ${userModel.peopleview['__${dates.key}__']}" >
+					<span th:if="${user1.name} eq ${user2.key}" th:each="shiftname,shiftnameStat:${user2.value}">
+					<span class="badge badge-success badge-pill" th:text="${shiftname}" style="margin:2px"></span><br th:if="${shiftnameStat.index}%4==3"/>
+					</span>
+					</span>
+					</td>
+					</tr>
+			</tbody>
+
+		</table>
+		 <table th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin'" id="table1" class="table table-striped text-nowrap" style="font-size:10px;display:none" >		 
+			<thead>  
+				<tr class="text-center">
+				    <th style="width:200px"></th>
+					<th th:each="shift,shiftStat : ${userModel.shiftlist}"><span th:text="${shift.name}" th:id="shift+${shiftStat.index}"></span><br/>
+					<div style="dispaly:none" id="shiftsize" data-th-attr="size=${shiftStat.size}"/>	
+					</th>
+				</tr>
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.shiftview}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td style="width:200px" th:text="${dates.key}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates.key,0,4),#strings.substring(dates.key,5,7),#strings.substring(dates.key,8,10)))}" data-th-attr="date=${dates.key}" th:id="dateid+${datesStat.index}">
+					</td>
+					
+					<td th:each="shift1,shift1Stat : ${userModel.shiftlist}" style="border:1px solid gray;padding:1px"
+					th:id="date+${datesStat.index}+shift+${shift1Stat.index}">
+					<span th:each="shift2,shift2Stat : ${userModel.shiftview['__${dates.key}__']}" >
+					<span th:if="${shift1.name} eq ${shift2.key}" th:each="username,usernameStat:${shift2.value}" >
+					<span th:text="'&nbsp'+${username}+'&nbsp'" class="badge badge-success badge-pill" style="margin:2px"></span><br th:if="${usernameStat.index}%4==3"/>
+					</span>
+					</span>
+					</td>
+					</tr>
+			</tbody>
+
+		</table>
+		<table th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin'" id="table2" class="table table-striped text-nowrap" style="font-size:10px;" >		 
+			<thead>  
+				<tr class="text-center">
+				    <th style="width:200px"></th>
+					<th th:each="user,userStat : ${userModel.userlist}"><span th:text="${user.name}"></span><br/>
+					<div style="dispaly:none" id="usersize" data-th-attr="size=${userStat.size}"/>	
+					</th>
+				</tr>
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.peopleview}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td style="width:200px" th:text="${dates.key}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates.key,0,4),#strings.substring(dates.key,5,7),#strings.substring(dates.key,8,10)))}" data-th-attr="date=${dates.key}" th:id="dateid+${datesStat.index}"></td>
+					
+					<td th:each="user1,user1Stat : ${userModel.userlist}" style="border:1px solid gray;padding:1px">
+					<span th:each="user2,user2Stat : ${userModel.peopleview['__${dates.key}__']}" >
+					<span th:if="${user1.name} eq ${user2.key}" th:each="shiftname,shiftnameStat:${user2.value}">
+					<span class="badge badge-success badge-pill" th:text="${shiftname}" style="margin:2px"></span><br th:if="${shiftnameStat.index}%4==3"/>
+					</span>
+					</span>
+					</td>
+					</tr>
+			</tbody>
+
+		</table>
+		</div>
+		<!--  <div th:replace="~{fragments/page :: page}">...</div>-->
+
+	</div>
+</div>
+<div  id="setShiftDates"></div>
+</div><!-- /.container -->
+<script src="../../js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+<script>$(document).on("click","#schedulestarttime,#scheduleendtime" ,function(e){
+	 WdatePicker({  
+         el: e.target,  
+         autoPickDate: true,  
+         dateFmt:"yyyy-MM-dd",
+         position:{top:-200}
+     });  
+ });</script>
+ <script src="../../js/schedule/main.js" th:src="@{/js/schedule/main.js}"></script>
+</body>
+</html>

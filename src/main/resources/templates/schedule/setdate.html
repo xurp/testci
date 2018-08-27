@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div id="mainContainer" class="container">
+<br/>
+<br/>
+<br/>
+<form 	th:action="@{/schedule}" method="post" th:object="${userModel.setDates}" class=" form-horizontal"	id="userForm">	<!-- th:action="@{/schedule}" method="post" -->
+		<div class="form-group row">
+			<label  for="starttime" class="col-form-label col-sm-3"><span style="color:red;">*</span>start date</label><div class="col-sm-9"> <input
+				type="text" class="form-control" id="schedulestarttime" name="starttime" 
+				th:value="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}" maxlength="50"
+				placeholder="please select the start date"></div>
+		</div>
+		<div class="form-group row">
+			<label for="endtime" class="col-form-label col-sm-3"><span style="color:red;">*</span>end date</label><div class="col-sm-9"> <input
+				type="text" class="form-control" id="scheduleendtime" name="endtime" 
+				maxlength="50"
+				placeholder="please select the end date"></div>
+		</div>
+		<div class="text-center" th:text="${userModel.errormessage}" style="color:red"></div>
+		
+		exclude more dates<a class="btn btn-primary" role="button" id="addExcludeDates"><i
+			class="fa fa-plus" aria-hidden="true"></i></a>
+			
+		<div class="form-group row" id="exd" >
+			<label for="excludeDates" class="col-form-label col-sm-3" >exclude Dates</label> <div class="col-sm-9"><input
+				type="text" class="form-control excludeDates" id="excludeDates" name="excludeDates"
+				th:value="*{excludeDates}" maxlength="50"
+				placeholder="please input excludeDates(for example:holidays)"></div>
+		</div>
+		
+		
+		<div class="form-group row"><div class="checkbox col-sm-3"><span style="color:red;">*</span><span>choose the shift group using in scheduling:</span></div>
+		<div class="col-sm-9"><label class="checkbox-inline" th:each="shiftgroup,shiftgroupStat : ${userModel.shiftGroups}">
+  <input type="checkbox" id="group+${shiftgroup.id}" name="selectedshiftgroup" th:value="${shiftgroup.id}" checked><span th:text="${shiftgroup.name}+'&nbsp;&nbsp;'"></span> 
+</label>
+</div></div>
+
+<br/>   <div class="text-center">
+		<button type="button" class="btn btn-primary" id="setDates">submit</button></div><br/>
+	</form>
+<div  id="setShiftDates"></div>
+</div><!-- /.container -->
+<script src="../../js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+<script>$(document).on("click","#schedulestarttime,#scheduleendtime,.excludeDates",function(e){
+	 WdatePicker({  
+         el: e.target,  
+         autoPickDate: true,  
+         dateFmt:"yyyy-MM-dd",
+         position:{top:-200}
+     });  
+ });</script>
+ <script src="../../js/schedule/main.js" th:src="@{/js/schedule/main.js}"></script>
+</body>
+</html>
+<!-- 
+<div class="card-header bg-dark font-white" >
+
+	<div class="input-group col-md-7 col-xl-6">
+
+		<input type="text" class="form-control" id="searchName"
+			placeholder="输入用户姓名进行搜索"> <span class="input-group-btn">
+			<button class="btn btn-secondary" type="button" id="searchNameBtn">
+				<i class="fa fa-search" aria-hidden="true"></i>
+			</button>
+		</span> <a class="btn btn-primary" data-toggle="modal"
+			data-target="#flipFlop" role="button" id="addShift"><i
+			class="fa fa-plus" aria-hidden="true"></i></a>
+
+	</div>
+</div>
+
+<div id="mainContainer" class="container">
+	<div id="mainContainerRepleace" class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th data-field="id">ID</th>
+					<th data-field="name">shift name</th>
+					<th data-field="starttime">start time</th>
+					<th data-field="endtime">end time</th>
+					<th data-field="num">employee number</th>
+					<th data-field="shiftGroup">shift group</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="shift : ${userModel.shiftList}">
+					<td th:text="${shift.id}"></td>
+					<td th:text="${shift.name}"></td>
+					<td th:text="${shift.starttime}"></td>
+					<td th:text="${shift.endtime}"></td>
+					<td th:text="${shift.num}"></td>
+					<td th:text="${shift.shiftgroup.name}"></td>
+					
+					<td>
+						<div>
+						
+							<a class="blog-edit-shift" data-toggle="modal" th:onclick="'editShift(\''+${shift.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="shiftId=${shift.id}"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</a> <a  class="blog-delete-shift" role="button" th:onclick="'deleteShift(\''+${shift.id}+'\')'"
+								data-th-attr="shiftId=${shift.id}"> <i class="fa fa-times"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+					</td>
+				</tr>
+
+			</tbody>
+
+		</table>
+		<div th:replace="~{fragments/page :: page}">...</div>
+
+	</div>
+</div>
+<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalLabel">新增/编辑</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+			</div>
+			<div class="modal-body" id="userFormContainer"></div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" data-dismiss="modal" id="submitEdit">提交</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>-->
+
+<!-- JavaScript -->

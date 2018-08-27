@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div class="container">
+
+	<form th:action="@{/changeshift}" method="post" th:object="${userModel.changeshift}"
+		id="userForm" class="form-horizontal">
+		<input type="hidden" name="id" th:value="*{id}">
+		<input type="hidden" name="userid" th:value="*{userid}">
+		<input type="hidden" name="username" th:value="*{username}">
+		<input type="hidden" name="isAgreed" th:value="*{isAgreed}">
+		<input type="hidden" name="isChanged" th:value="*{isChanged}">
+            <div class="form-group row">
+				<label for="changeid" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>exchange employee</label>
+				<div class="col-sm-7"><select id="changeid" name="changeid" class="form-control form-control-chosen" data-placeholder="please select">
+					<option th:each="user: ${userModel.userlist}"
+						th:value="${user.id}"
+						th:text="${user.name}"></option>
+				</select></div>
+			</div>
+			<!--  <div class="form-group row">
+			<label for="filename" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>work shift file name</label> <div class="col-sm-7">
+			<input 
+				type="text" class="form-control" id="filename" name="filename"
+				th:value="*{filename}" maxlength="50"></div>
+
+		    </div>-->
+		     <div class="form-group row">
+				<label for="filename" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>work shift file name</label>
+				<div class="col-sm-7"><select id="filename" name="filename" class="form-control form-control-chosen" data-placeholder="please select">
+					<option th:each="shift: ${userModel.filelist}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select></div>
+			</div>
+		    <div class="form-group row">
+			<label for="date" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>my original date</label> <div class="col-sm-7">
+			<input 
+				type="text" class="form-control" id="date" name="date"
+				th:value="*{date}" maxlength="50"></div>
+
+		    </div>
+		    <!--  <div class="form-group row">
+			<label for="shiftname" class="col-form-label col-sm-3" style="padding-left:0px"><span style="color:red;">*</span>my original shift</label> <div class="col-sm-9">
+			<input 
+				type="text" class="form-control" id="shiftname" name="shiftname"
+				th:value="*{shiftname}" maxlength="50"></div>
+
+		    </div>-->
+		    <div class="form-group row">
+				<label for="shiftname" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>my original shift</label>
+				<div class="col-sm-7"><select id="shiftname" name="shiftname" class="form-control form-control-chosen" data-placeholder="please select">
+					<option th:each="shift: ${userModel.shiftlist}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select></div>
+			</div>
+		    
+		    <div class="form-group row">
+			<label for="todate" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>his/her original date</label> <div class="col-sm-7">
+			<input 
+				type="text" class="form-control" id="todate" name="todate"
+				th:value="*{todate}" maxlength="50"></div>
+
+		    </div>
+		    <!--  <div class="form-group row">
+			<label for="toshiftname" class="col-form-label col-sm-3" style="padding-left:0px"><span style="color:red;">*</span>exchanged employee original shift</label> <div class="col-sm-9">
+			<input 
+				type="text" class="form-control" id="toshiftname" name="toshiftname"
+				th:value="*{toshiftname}" maxlength="50"></div>
+
+		    </div>-->
+		     <div class="form-group row">
+				<label for="toshiftname" class="col-form-label col-sm-5"style="padding-left:0px"><span style="color:red;">*</span>his/her original shift</label>
+				<div class="col-sm-7"><select id="toshiftname" name="toshiftname" class="form-control form-control-chosen" data-placeholder="please select">
+					<option th:each="shift: ${userModel.shiftlist}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select></div>
+			</div>
+		<div class="form-group  row">
+			<label for="reason" class="col-form-label col-sm-5"style="padding-left:0px">reasons for application</label> <div class="col-sm-7">
+			<textarea rows="5" cols="20" class="form-control" id="reason" name="reason"
+				th:value="*{reason}"></textarea>
+			<!--  <input
+				type="textarea" class="form-control" id="name" name="name"
+				th:value="*{name}" maxlength="50"
+				placeholder="number of characters:2~20">--></div>
+		</div>
+		<div class="text-center"><button type="button" class="btn btn-primary"  id="submitEdit">Submit</button></div>
+		
+	</form>
+
+</div><!-- /.container -->
+<script src="../../js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+<script>$(document).on("click","#date,#todate" ,function(e){
+	 WdatePicker({  
+         el: e.target,  
+         autoPickDate: true,  
+         dateFmt:"yyyy-MM-dd",
+         position:{top:-200}
+     });  
+ });
+var _pageSize; // 存储用于搜索
+var _arg;
+var _id=$("#changetype").val();;
+function getChangeShifts(pageIndex, pageSize,arg,id) {
+    $.ajax({ 
+        url: "/changeshift/"+id, 
+        contentType : 'application/json',
+        data:{
+            "async":true, 
+            "pageIndex":pageIndex,
+            "pageSize":pageSize,
+            "arg":arg
+        },
+        success: function(data){
+            $("#mainContainer").html(data);
+        },
+        error : function() {
+            toastr.error("error!");
+        }
+    });
+}// 分页
+$.tbpage("#mainContainer", function (pageIndex, pageSize) {
+	getChangeShifts(pageIndex, pageSize,_arg,1);
+    _pageSize = pageSize;
+});
+$("#submitEdit").click(function() {
+	
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+    $.ajax({ 
+         url: "/changeshift", 
+         type: 'POST',
+         data:$('#userForm').serialize(),
+         success: function(data){
+             //$('#userForm')[0].reset(); 
+             if (data.success) {
+            	 $('#flipFlop').modal('hide');
+            	 getChangeShifts(0, _pageSize,"all",1);
+             } else {
+                 toastr.error(data.message);
+             }
+
+         },
+         error : function() {
+             toastr.error("error!");
+         }
+     });
+});</script>
+ </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<input type="hidden" th:id="changetype" th:value="${userModel.changetype}"/>
+<div class="card-header bg-dark font-white" >
+
+	<div class="input-group col-md-7 col-xl-6" >
+        <a class="btn btn-primary" data-toggle="modal" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin' and ${userModel.changetype} eq 1"
+			data-target="#flipFlop" role="button" id="addchangeshift" style="margin-right:10px"><i
+			class="fa fa-plus" aria-hidden="true" ></i></a>
+			
+			 <a class="btn btn-success active filterbutton" 
+			 role="button" id="all" style="margin-right:10px">all</a>
+			 <a class="btn btn-warning filterbutton" 
+			 role="button" id="agreedbutnotyetapproved" style="margin-right:10px">agreed but not yet approved</a>
+			<a class="btn btn-success  filterbutton"  
+			 role="button" id="agreed" >agreed</a>
+			<a class="btn btn-warning filterbutton" 
+			 role="button" id="notyetagreed" style="margin-right:10px">not yet agreed</a>
+			 <a class="btn btn-success  filterbutton" 
+			 role="button" id="approved" >approved</a>
+			 <a class="btn btn-warning filterbutton" 
+			 role="button" id="notyetapproved" >not yet approved</a>
+			 <a class="btn btn-danger filterbutton" 
+			 role="button" id="refuse" >refused</a>
+	</div>
+</div>
+
+<div id="mainContainer" class="container">
+	<div id="mainContainerRepleace" class="row" >
+	
+		<table class="table table-striped">
+			<thead>
+				<tr>
+				<th data-field="id">ID</th>
+					<th data-field="applicant">applicant</th>
+					<th data-field="exchange employee">exchange employee</th>
+					<th data-field="email">exchange employee has agreed</th>
+					<th data-field="type">approved</th>
+					<th data-field="application time">application time</th>
+					<th data-field="approval time">approval time</th>
+					<th data-field="operation">operation</th>
+					
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="change : ${userModel.changeshiftList}">
+					<td th:text="${change.id}"></td>
+					<td th:text="${userModel.namemap['__${change.userid}__']}"></td>
+					<td th:text="${userModel.namemap['__${change.changeid}__']}"></td>
+					<td ><span th:text="${change.isAgreed}" th:class="${change.isAgreed} eq 'true'? 'badge badge-success':'badge badge-warning'"></span></td>
+					<td ><span th:text="${change.isChanged}" th:class="${change.isChanged} eq 'true'? 'badge badge-success': (${change.isChanged} eq 'false'?'badge badge-warning':'badge badge-danger')"></span></td>
+					<td th:text="${#dates.format(change.createTime,'yyyy-MM-dd HH:mm')}"></td>
+					<td th:text="${#dates.format(change.operTime,'yyyy-MM-dd HH:mm')}"></td>
+					<td>
+						<div>
+							<a class="blog-edit-change" th:if="${change.isChanged} eq 'false'" data-toggle="modal" th:onclick="'editchange(\''+${change.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="changeId=${change.id}"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</a> 
+							<a class="blog-edit-change" th:if="${change.isChanged} neq 'false'" data-toggle="modal" th:onclick="'editchange(\''+${change.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="changeId=${change.id}"> <i
+								class="fa fa-table" aria-hidden="true"></i>
+							</a> 
+							<a   th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin' or ${userModel.changetype} eq 1" class="delete-changeshift" role="button" th:onclick="'deletechangeshift(\''+${change.id}+'\')'"
+								data-th-attr="changeId=${change.id}"> <i th:if="${change.isChanged} eq 'false'" class="fa fa-times"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+					</td>
+				</tr>
+
+			</tbody>
+
+		</table>
+		<div th:replace="~{fragments/page :: page}">...</div>
+
+	</div>
+	
+</div>
+<!-- The modal -->
+<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document" >
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalLabel">change shift</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+			</div>
+			<div class="modal-body" id="userFormContainer"></div>
+			<div class="modal-footer">
+				
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- JavaScript -->
+<script src="../../js/changeshift/main.js" th:src="@{/js/changeshift/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+
+	<div class="container stm-content-container">
+
+		<form th:action="@{~/login}" method="post">
+		<br/>
+			<h2>Please sign in</h2>
+            <div th:if="${loginError}" th:text="${errorMsg}"/>
+			<div class="form-group col-md-3">
+				<label for="username" class="col-form-label">username</label> <input
+					type="text" class="form-control" id="username" name="username"
+					maxlength="50" placeholder="Please input username">
+
+			</div>
+			<div class="form-group col-md-3">
+				<label for="password" class="col-form-label">password</label> <input
+					type="password" class="form-control" id="password" name="password"
+					maxlength="30" placeholder="please input password">
+			</div>
+			<!--  <div class="form-group col-md-5">
+				<input type="checkbox" value="remember-me"> remember me
+			</div>-->
+			<div class="form-group col-md-3" style="padding:0px">
+				<button type="submit" class="btn btn-primary">sign in</button>
+			</div>
+
+		</form>
+	</div><!-- /container -->
+
+
+	<div th:replace="~{fragments/footer :: footer}">...</div>
+</body>
+</html>

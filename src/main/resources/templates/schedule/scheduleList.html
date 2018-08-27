@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+
+<div id="mainContainer" class="container" >
+	<div id="mainContainerRepleace" class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+				<th data-field="id">ID</th>
+					<th data-field="name">filename</th>
+					<th data-field="createTime">createTime</th>
+					<th data-field="operation">operation</th>
+					
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="workshift : ${userModel.workshiftList}">
+					<td th:text="${workshift.id}">1</td>
+					<td th:text="${workshift.name}">1</td>
+					<td th:text="${#dates.format(workshift.createTime,'yyyy-MM-dd HH:mm')}"></td>
+					<td>
+						<div th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin'">
+							<a class="edit-workshift" data-toggle="modal" th:onclick="'editworkshift(\''+${workshift.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="workshiftId=${workshift.id}"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</a> 
+							<a  class="delete-workshift" role="button" th:onclick="'deleteworkshift(\''+${workshift.id}+'\')'"
+								data-th-attr="workshiftId=${workshift.id}"> <i class="fa fa-times"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+						<div th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq 'admin'">
+						<a class="edit-workshift" data-toggle="modal" th:onclick="'editworkshift(\''+${workshift.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="workshiftId=${workshift.id}"> <i
+								class="fa fa-table" aria-hidden="true"></i>
+							</a> 
+						</div>
+					</td>
+				</tr>
+
+			</tbody>
+
+		</table>
+		<div th:replace="~{fragments/page :: page}">...</div>
+
+	</div>
+</div>
+
+
+<!-- JavaScript -->
+<script src="../../js/schedule/main.js" th:src="@{/js/schedule/main.js}"></script>
+</body>
+</html>

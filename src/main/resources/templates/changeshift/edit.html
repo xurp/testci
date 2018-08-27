@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div class="container">
+<form th:action="@{/changeshift}" method="post" th:object="${userModel.changeshift}"
+		id="userForm" class="form-horizontal">
+		<input type="hidden" name="id" th:value="*{id}">
+		<input type="hidden" name="filename" th:value="*{filename}" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+		<input type="hidden" name="userid" th:value="*{userid}">
+		<input type="hidden" name="username" th:value="*{username}">
+		<input type="hidden" name="changeid" th:value="*{changeid}" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+		<input type="hidden" name="changename" th:value="*{changename}" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+		<input type="hidden" name="isAgreed" th:value="*{isAgreed}">
+		<input type="hidden" name="isChanged" th:value="*{isChanged}">
+		<input type="hidden" name="createTime" th:value="*{createTime}">
+		<input type="hidden" name="shiftname" th:value="*{shiftname}" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+		<input type="hidden" name="toshiftname" th:value="*{toshiftname}" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+		
+			<div class="form-group row">
+			<label for="filename" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>applicant</label> <div class="col-sm-7">
+			<input th:readonly="readonly"
+				type="text" class="form-control"
+				th:value="${userModel.namemap['__*{userid}__']}" maxlength="50"></div>
+
+		    </div>
+			<div class="form-group row">
+				<label for="changeid" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>exchange employee</label>
+				<div class="col-sm-7"><select id="changeid" name="changeid" class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}">
+					<option th:each="user: ${userModel.userlist}" data-th-selected="${userModel.changeshift.changeid eq user.id}"
+						th:value="${user.id}"
+						th:text="${user.name}"></option>
+				</select>
+				<!-- <select class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+					<option th:value="*{changeid}"	th:text="${userModel.namemap['__*{changeid}__']}"></option>
+				</select>-->
+				<input th:readonly="readonly" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}"
+				type="text" class="form-control"
+				th:value="${userModel.namemap['__*{changeid}__']}" maxlength="50">
+				</div>
+			</div>
+			<!--  <div class="form-group row">
+			<label for="filename" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>work shift file name</label> <div class="col-sm-7">
+			<input th:readonly="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}? 'false' : 'readonly'"
+				type="text" class="form-control" id="filename" name="filename"
+				th:value="*{filename}" maxlength="50"></div>
+
+		    </div>-->
+		    <div class="form-group row">
+				<label for="filename" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>work shift file name</label>
+				<div class="col-sm-7"><select id="filename" name="filename" class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}">
+					<option th:each="shift: ${userModel.filelist}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select>
+				<!-- <select class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+				<option th:value="*{filename}"	th:text="*{filename}"></option>					
+				</select>-->
+				<input th:readonly="readonly" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}"
+				type="text" class="form-control"
+				th:value="*{filename}" maxlength="50">
+				</div>
+			</div>
+		    <div class="form-group row">
+			<label for="date" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>my original date</label> <div class="col-sm-7">
+			<input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}"
+				type="text" class="form-control" id="date" name="date"
+				th:value="*{date}" maxlength="50">
+				
+				<input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}" th:readonly="readonly"
+				type="text" class="form-control" name="date"
+				th:value="*{date}" maxlength="50">
+				</div>
+
+		    </div>
+		      <!--  <div class="form-group row">
+			<label for="shiftname" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>my original shift</label> <div class="col-sm-7">
+			<input 
+				type="text" class="form-control" id="shiftname" name="shiftname"
+				th:value="*{shiftname}" maxlength="50"></div>
+
+		    </div>-->
+		    <div class="form-group row">
+				<label for="shiftname" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>my original shift</label>
+				<div class="col-sm-7"><select id="shiftname" name="shiftname" class="form-control form-control-chosen" data-placeholder="please select" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}">
+					<option th:each="shift: ${userModel.shiftlist}" data-th-selected="${userModel.changeshift.shiftname eq shift.name}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select>
+				<!-- <select class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+					<option th:value="*{shiftname}"	th:text="*{shiftname}"></option>
+				</select>-->
+				<input th:readonly="readonly" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}"
+				type="text" class="form-control"
+				th:value="*{shiftname}" maxlength="50">
+				</div>
+			</div>
+		    
+		    <div class="form-group row">
+			<label for="todate" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>his/her original date</label> <div class="col-sm-7">
+			<input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}"
+				type="text" class="form-control" id="todate" name="todate"
+				th:value="*{todate}" maxlength="50">
+				<input th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}" th:readonly="readonly"
+				type="text" class="form-control" name="todate"
+				th:value="*{todate}" maxlength="50">
+				</div>
+
+		    </div>
+		   <!--  <div class="form-group row">
+			<label for="toshiftname" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>exchanged employee original shift</label> <div class="col-sm-7">
+			<input 
+				type="text" class="form-control" id="toshiftname" name="toshiftname"
+				th:value="*{toshiftname}" maxlength="50"></div>
+
+		    </div>-->
+		     <div class="form-group row">
+				<label for="toshiftname" class="col-form-label col-sm-5" style="padding-left:0px"><span style="color:red;">*</span>his/her original shift</label>
+				<div class="col-sm-7"><select id="toshiftname" name="toshiftname" class="form-control form-control-chosen" data-placeholder="please select" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}">
+					<option th:each="shift: ${userModel.shiftlist}" data-th-selected="${userModel.changeshift.toshiftname eq shift.name}"
+						th:value="${shift.name}"
+						th:text="${shift.name}"></option>
+				</select>
+				<!-- <select class="form-control form-control-chosen" data-placeholder="please select"
+				th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}">
+					<option th:value="*{toshiftname}"	th:text="*{toshiftname}"></option>
+				</select>-->
+				<input th:readonly="readonly" th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} neq ${userModel.changeshift.username}"
+				type="text" class="form-control"
+				th:value="*{toshiftname}" maxlength="50">
+				</div>
+			</div>
+		<div class="form-group  row">
+			<label for="reason" class="col-form-label col-sm-5" style="padding-left:0px">reasons for application</label> <div class="col-sm-7">
+			<textarea rows="5" cols="20" class="form-control" id="reason" name="reason" th:readonly="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username}? 'false' : 'readonly'"
+				>[[*{reason}]]</textarea>
+				<br/><br/>
+			<button th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.username} and ${userModel.changeshift.isAgreed} eq 'false'" type="button" class="btn btn-primary"  id="submitEdit">Submit</button>
+			<button th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq ${userModel.changeshift.changename} and ${userModel.changeshift.isAgreed} eq 'false'" type="button" class="btn btn-primary"  id="toagreed">Agree</button>
+			<button th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin' and ${userModel.changeshift.isChanged} eq 'false'" type="button" class="btn btn-primary"  id="toapprove">Approve</button>
+			<button th:if="${session.SPRING_SECURITY_CONTEXT.authentication.principal.username} eq 'admin' and ${userModel.changeshift.isChanged} eq 'false'" type="button" class="btn btn-danger"  id="torefuse">Refuse</button>
+			<!--  <input
+				type="textarea" class="form-control" id="name" name="name"
+				th:value="*{name}" maxlength="50"
+				placeholder="number of characters:2~20">--></div>
+		</div>
+		
+		
+	</form>
+
+
+</div><!-- /.container -->
+<script src="../../js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+<script>$(document).on("click","#date,#todate" ,function(e){
+	 WdatePicker({  
+         el: e.target,  
+         autoPickDate: true,  
+         dateFmt:"yyyy-MM-dd",
+         position:{top:-200}
+     });  
+ });
+var _pageSize; // 存储用于搜索
+var _arg;
+var _id=$("#changetype").val();;
+function getChangeShifts(pageIndex, pageSize,arg,id) {
+    $.ajax({ 
+        url: "/changeshift/"+id, 
+        contentType : 'application/json',
+        data:{
+            "async":true, 
+            "pageIndex":pageIndex,
+            "pageSize":pageSize,
+            "arg":arg
+            
+        },
+        success: function(data){
+            $("#mainContainer").html(data);
+        },
+        error : function() {
+            toastr.error("error!");
+        }
+    });
+}// 分页
+$.tbpage("#mainContainer", function (pageIndex, pageSize) {
+	getChangeShifts(pageIndex, pageSize,_arg,_id);
+    _pageSize = pageSize;
+});
+$("#toagreed").click(function() {
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+	$.ajax({ 
+        url: "/changeshift/agree", 
+        type: 'POST',
+        data:$('#userForm').serialize(),
+        success: function(data){
+            //$('#userForm')[0].reset(); 
+            if (data.success) {
+           	 $('#flipFlop').modal('hide');
+           	 getChangeShifts(0, _pageSize,_arg,2);
+            } else {
+                toastr.error(data.message);
+            }
+
+        },
+        error : function() {
+            toastr.error("error!");
+        }
+    });
+});
+$("#toapprove").click(function() {
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+	$.ajax({ 
+        url: "/changeshift/approve", 
+        type: 'POST',
+        data:$('#userForm').serialize(),
+        success: function(data){
+            //$('#userForm')[0].reset(); 
+            if (data.success) {
+           	 $('#flipFlop').modal('hide');
+           	 getChangeShifts(0, _pageSize,_arg,3);
+            } else {
+                toastr.error(data.message);
+            }
+
+        },
+        error : function() {
+            toastr.error("error!");
+        }
+    });
+});
+$("#torefuse").click(function() {
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+	$.ajax({ 
+        url: "/changeshift/refuse", 
+        type: 'POST',
+        data:$('#userForm').serialize(),
+        success: function(data){
+            //$('#userForm')[0].reset(); 
+            if (data.success) {
+           	 $('#flipFlop').modal('hide');
+           	 getChangeShifts(0, _pageSize,_arg,3);
+            } else {
+                toastr.error(data.message);
+            }
+
+        },
+        error : function() {
+            toastr.error("error!");
+        }
+    });
+});
+$("#submitEdit").click(function() {
+	
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	$(document).ajaxSend(function(e, xhr, options) {
+	    xhr.setRequestHeader(header, token);
+	});
+    $.ajax({ 
+         url: "/changeshift", 
+         type: 'POST',
+         data:$('#userForm').serialize(),
+         success: function(data){
+             //$('#userForm')[0].reset(); 
+             if (data.success) {
+            	 $('#flipFlop').modal('hide');
+            	 getChangeShifts(0, _pageSize,_arg,_id);
+             } else {
+                 toastr.error(data.message);
+             }
+
+         },
+         error : function() {
+             toastr.error("error!");
+         }
+     });
+});</script>
+</body>
+</html>

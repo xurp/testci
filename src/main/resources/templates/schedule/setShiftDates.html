@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+
+ 
+<div class="card-header bg-dark font-white" >
+	   <div class="text-center">
+	   Please choose dates applied to each shift then click "submit"<br/><br/>
+	   <input type="button" id="submitdatesofshift" value="submit" class="btn btn-primary"/> <br/>
+	   </div>
+      <input type="hidden" value="0" id="buttonid"/>
+</div>
+<!-- The modal -->
+<div class="modal fade" id="week" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document" >
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalLabel">choose day of week</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+			</div>
+			<div class="modal-body" id="userFormContainer">
+			<div class="text-center">Please choose dates applied to each shift<br/></div>
+			Monday<input id="day1" type="checkbox" checked /><br/>Tuesday<input id="day2" type="checkbox" checked/><br/>
+			Wednesday<input id="day3" type="checkbox" checked/><br/>
+	   Thursday<input id="day4" type="checkbox" checked/><br/>
+	   Friday<input id="day5" type="checkbox" checked/><br/>Saturday<input id="day6" type="checkbox" checked/><br/>
+	   Sunday<input id="day7" type="checkbox" checked/><br/>
+	   	  
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary"  id="submitweek" data-dismiss="modal">Submit</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="container">
+	<div id="mainContainerRepleace" class="row">
+	   <div class="table-responsive">
+	   
+		 <table class="table table-striped text-nowrap"  >
+			<thead>
+			
+				<tr class="text-center" style="font-size:12px;" >
+				    <th style="width:200px">shift name/date</th>
+					<th th:each="shift,shiftStat : ${userModel.shiftlist}"><span th:text="${shift.name}"></span><br/>
+					<div style="dispaly:none" id="shiftsize" data-th-attr="size=${shiftStat.size}"/>	
+					select/deselect all<input class="selectall" th:id="all+${shiftStat.index}" data-th-attr="allId=${shiftStat.index}" type="checkbox" checked /><br/>
+					<input type="button" data-th-attr="buttonId=${shiftStat.index}" class="config" value="select week" data-toggle="modal"
+			data-target="#week"/>
+					</th>
+				</tr>				
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.shiftdates}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td style="width:200px" th:text="${dates}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates,0,4),#strings.substring(dates,5,7),#strings.substring(dates,8,10)))}" data-th-attr="date=${dates}" th:id="dateid+${datesStat.index}"></td>
+					
+					<td th:each="shift,shiftStat : ${userModel.shiftlist}">
+					<span class="tocheck"><input th:class="shift+${shiftStat.index}" type="checkbox" checked/></span>
+					</td>
+					</tr>
+					
+					<!-- 
+					<td>
+						<div>
+						
+							<a class="blog-edit-shift" data-toggle="modal" th:onclick="'editShift(\''+${shift.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="shiftId=${shift.id}"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</a> <a  class="blog-delete-shift" role="button" th:onclick="'deleteShift(\''+${shift.id}+'\')'"
+								data-th-attr="shiftId=${shift.id}"> <i class="fa fa-times"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+					</td>
+					 -->
+				
+
+			</tbody>
+
+		</table>
+		</div>
+		<!--  <div th:replace="~{fragments/page :: page}">...</div>-->
+
+	</div>
+</div>
+
+ <script src="../../js/schedule/main.js" th:src="@{/js/schedule/main.js}"></script>
+<!-- JavaScript -->

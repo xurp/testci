@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div id="mainContainer" class="container">
+<br/>
+<br/>
+<br/>
+<input th:if="${userModel.saveoredit} eq 'save'" type="hidden" id="savedornot" data-th-attr="editid=-1" th:value="-1"/>
+<input th:if="${userModel.saveoredit} eq 'edit'" type="hidden" id="savedornot" data-th-attr="editid=${userModel.editid}" th:value="${userModel.editid}"/>
+<input type="hidden" id="groups"  th:value="${userModel.groups}"/>
+<div class="card-header bg-dark font-white" >
+	   <div class="text-center">	   
+			<form class="form-inline">
+  <div class="form-group" style="margin-left:20%">
+    <label for="filename">please input file name then press the button</label>
+    <input type="text" class="form-control" id="filename" name="filename" th:value="${userModel.filename}" style="width:400px">
+  </div> 
+  <input type="button" class="btn btn-primary" value="save work shift" id="editWorkShift">
+</form>
+	   </div>
+</div>
+
+<div class="container">
+	<div id="mainContainerRepleace" class="row">
+	   <div class="table-responsive">
+		 <table id="table1" class="table table-striped text-nowrap" style="font-size:10px" >		 
+			<thead>  
+				<tr class="text-center">
+				    <th ></th>
+					<th th:each="shift,shiftStat : ${userModel.shiftlist}"><span th:text="${shift.name}" th:id="shift+${shiftStat.index}"></span><br/>
+					<div style="dispaly:none" id="shiftsize" data-th-attr="size=${shiftStat.size}"/>	
+					</th>
+				</tr>
+			</thead>
+			<tbody >
+					<tr th:each="dates,datesStat : ${userModel.shiftview}" th:id="day+${datesStat.index}">
+					<div style="dispaly:none" id="datesize" data-th-attr="size=${datesStat.size}"/>					
+					<td  th:text="${dates.key}+' '+${#dates.dayOfWeekName(#dates.create(#strings.substring(dates.key,0,4),#strings.substring(dates.key,5,7),#strings.substring(dates.key,8,10)))}" data-th-attr="date=${dates.key}" th:id="dateid+${datesStat.index}"></td>
+					
+					<td th:each="shift1,shift1Stat : ${userModel.shiftlist}" style="border:1px solid black;padding:1px"
+					th:id="date+${datesStat.index}+shift+${shift1Stat.index}">
+					
+					<input type="button" value="add" th:id="date+${datesStat.index}+shift+${shift1Stat.index}+button"
+				th:onclick="'addemployee(\''+date+${datesStat.index}+shift+${shift1Stat.index}+button+'\')'"/>
+				<select style="width:150px;display:none" id="type" name="type" class="form-control form-control-chosen" th:id="date+${datesStat.index}+shift+${shift1Stat.index}+buttonadd1">
+					<option th:each="shiftgroupusers : ${userModel.shiftgroupusersmap['__${shift1.shiftgroup.name}__']}"
+						th:value="${shiftgroupusers.name}" data-th-selected="${shiftgroupusers.name eq ''}"
+						th:text="${shiftgroupusers.name}"></option>				
+				</select>
+				<select style="width:150px;display:none" id="type" name="type" class="form-control form-control-chosen" th:id="date+${datesStat.index}+shift+${shift1Stat.index}+buttonadd2">
+					<option th:each="shiftgroupusers : ${userModel.shiftgroupusersmap['__${shift1.shiftgroup.name}__']}"
+						th:value="${shiftgroupusers.name}" data-th-selected="${shiftgroupusers.name eq ''}"
+						th:text="${shiftgroupusers.name}"></option>				
+				</select>
+				<select style="width:150px;display:none" id="type" name="type" class="form-control form-control-chosen" th:id="date+${datesStat.index}+shift+${shift1Stat.index}+buttonadd3">
+					<option th:each="shiftgroupusers : ${userModel.shiftgroupusersmap['__${shift1.shiftgroup.name}__']}"
+						th:value="${shiftgroupusers.name}" data-th-selected="${shiftgroupusers.name eq ''}"
+						th:text="${shiftgroupusers.name}"></option>				
+				</select>
+				    
+					<span th:each="shift2,shift2Stat : ${userModel.shiftview['__${dates.key}__']}" th:id="date+${datesStat.index}+shift+${shift1Stat.index}+span">
+				<!--  	<span th:if="${shift1.name} eq ${shift2.key}" th:each="username,usernameStat:${shift2.value}" th:text="${username}+';'">-->
+				
+				
+				<select style="width:150px" id="type" name="type" class="form-control form-control-chosen" 
+				th:if="${shift1.name} eq ${shift2.key}" th:each="username,usernameStat:${shift2.value}" >
+					<option th:each="shiftgroupusers : ${userModel.shiftgroupusersmap['__${shift1.shiftgroup.name}__']}"
+						th:value="${shiftgroupusers.name}" data-th-selected="${username eq shiftgroupusers.name}"
+						th:text="${shiftgroupusers.name}"></option>				<!--${userModel.shiftgroupusersmap['__${shift1.shiftgroup.name}__']}} -->	
+				</select>
+			
+					<!--<br th:if="${usernameStat.index}%3==2"/>-->
+				<!-- 	</span>-->
+					</span>
+					</td>
+					</tr>
+			</tbody>
+
+		</table>
+		
+		</div>
+		<!--  <div th:replace="~{fragments/page :: page}">...</div>-->
+
+	</div>
+</div>
+<div  id="setShiftDates"></div>
+</div><!-- /.container -->
+<script src="../../js/My97DatePicker/WdatePicker.js" th:src="@{/js/My97DatePicker/WdatePicker.js}"></script>
+ <script src="../../js/schedule/main.js" th:src="@{/js/schedule/main.js}"></script>
+</body>
+</html>
+

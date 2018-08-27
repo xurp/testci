@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+<div class="container stm-content-container">
+
+    <div class="row">
+
+        <div class="col-md-8" >
+
+            <div class="card mb-4" >
+                <div class="card-block">
+                    <h2 class="card-title">
+					User Manual
+				   </h2>                       
+                    <p class="card-text">
+					Hi. This is the User Manual of Boxing Club Staff Rostering Management System.<br/>
+					1.The index page is `http://localhost:8080/index`. Click `sign in` to sign in the system.<br/>
+					2.Click `management` to go to the management page.<br/><br/>					
+					For admin:<br/>
+					1. user management: You can add, edit, delete, search users in the system. `type` means `job title`.<br/>
+					2. set type: Type can be seen as `job title` or `department`. There are 6 types defined in the system. You can add, edit or delete types.<br/>
+					3. set shift group: A shift group may have several shifts. For example, there are shifts for boxers in workdays and shifts for boxers in weekends. You can create a shift group named `boxer` and every shift belongs to this group. Or you can create two shift group `boxer weekdays` and `boxer weekends`. Shift groups are defined for scheduling work shift. So a shift group should be associated with a type(for instance, boxers must join boxers' shift group).<br/>
+					4. set shift: You can add, edit, delete, search shifts in the system. <br/>
+					5. set labor law: If your club obeys the labor law, you should set the longest labor time per week. If the scheduling work shift breaks the law, the system will warn.<br/>  
+					6. begin to schedule: First, set the start date and end date. You can add excluded date as well. Choose the shift group using in scheduling. Then, choose dates applied to each shift. Click `submit` to get the scheduling work shift. You can switch from shift view to people view. Besides, it shows labor statistics. If you want to save it, input the file name then click `save work shift`.<br/>
+					7. view work shift: You can view the saved work shifts. Click `edit` icon to view it. You can edit table by clicking `edit table`. You can add, change or delete the employee of the shift. Finally, you can override the work shift or save as the new work shift.<br/>
+					8. change shift: You can see the list of applications of changing shift. If A wants to change shift with B, A is `applicant` and B is `exchange employee`. If the exchange employee has agreed the application, you can click edit button to decide whether to approve the application or refuse it. Then, do not forget to edit the work shift.<br/>
+					<br/>
+					
+					For employee:<br/>
+					1. user management: You can change your password.<br/>
+					2. view work shift: You can view the work shift by clicking the icon.<br/>
+					3. apply for changing shift: If you want to change the shift, you should first consult with someone. Then click `+` to create a new application. After submission, you can see the status in the list. If it is approved, it means that the manager has approved your application.<br/>
+					4. agree to change shift: If your colleague consulted with you for changing shift, he or she will create an application in the system. You need to agree it. 
+,  
+					
+					</p>
+                    <div class="card-text">
+                        <a href="#" class="card-link">admin</a> 2018-08-23 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4" >
+                <div class="card mb-4" >
+                    <h5 class="card-header"><i class="fa fa-fire" aria-hidden="true"></i> Help </h5>
+
+                    <ul class="list-group">
+                        <a href="/usermanual" class="list-group-item" title="">
+                           user manual<span class="badge badge-danger badge-pill">1</span>
+                        </a>
+                        <a href="/readme" class="list-group-item" title="">
+                            README<span class="badge badge-warning badge-pill">2</span>
+                        </a>
+                        
+                    </ul>
+
+                </div>
+
+               
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+</body>
+</html>

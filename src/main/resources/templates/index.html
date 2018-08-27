@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+<div class="container stm-content-container">
+
+    <div class="row">
+
+        <div class="col-md-8" >
+
+            <div class="card mb-4" >
+                <div class="card-block">
+                    <h2 class="card-title">
+					<div sec:authorize="isAuthenticated()">
+                        <a href="/" class="card-link" title="">	
+						welcome <span th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal.name}"></span> <!-- <span sec:authentication="name"></span>-->
+						 </a>
+				    </div>
+					<div sec:authorize="isAnonymous()">
+					Please sign in
+					</div>
+				   </h2>                       
+                    <p class="card-text">
+					Hi. This is the Boxing Club Staff Rostering Management System
+					</p>
+                    <div class="card-text">
+                        <a href="/" class="card-link">admin</a> 2018-08-16 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4" >
+                <div class="card mb-4" >
+                    <h5 class="card-header"><i class="fa fa-fire" aria-hidden="true"></i> Help </h5>
+
+                    <ul class="list-group">
+                        <a href="/usermanual" class="list-group-item" title="">
+                           user manual<span class="badge badge-danger badge-pill">1</span>
+                        </a>
+                        <a href="/readme" class="list-group-item" title="">
+                            README<span class="badge badge-warning badge-pill">2</span>
+                        </a>
+                        
+                    </ul>
+
+                </div>
+
+               
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+</body>
+</html>

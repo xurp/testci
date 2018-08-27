@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-th-fragment="header">
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div class="card-header bg-dark font-white" style="padding-left:0px">
+
+	<a class="btn btn-primary" data-toggle="modal"
+			data-target="#flipFlop" role="button" id="addShiftGroup"><i
+			class="fa fa-plus" aria-hidden="true"></i></a>
+
+	
+</div>
+
+<div id="mainContainer" class="container">
+	<div id="mainContainerRepleace" class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th data-field="id">ID</th>
+					<th data-field="name">shift group name</th>
+					<th data-field="type">type</th>
+					<th data-field="operation">operation</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="shiftGroup : ${userModel.shiftGroupList}">
+					<td th:text="${shiftGroup.id}"></td>
+					<td th:text="${shiftGroup.name}"></td>
+					<td th:text="${shiftGroup.type.name}"></td>
+					<td>
+						<div>
+						<!-- change the class name, this class only for js, not css -->
+							<a class="blog-edit-shiftGroup" data-toggle="modal" th:onclick="'editShiftGroup(\''+${shiftGroup.id}+'\')'"
+								data-target="#flipFlop" role="button"
+								data-th-attr="shiftGroupId=${shiftGroup.id}"> <i
+								class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</a> <a  class="blog-delete-shiftGroup" role="button" th:onclick="'deleteShiftGroup(\''+${shiftGroup.id}+'\')'"
+								data-th-attr="shiftGroupId=${shiftGroup.id}"> <i class="fa fa-times"
+								aria-hidden="true"></i>
+							</a>
+						</div>
+					</td>
+				</tr>
+
+			</tbody>
+
+		</table>
+		<div th:replace="~{fragments/page :: page}">...</div>
+
+	</div>
+</div>
+
+<!-- The modal -->
+<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog"
+	aria-labelledby="modalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalLabel">add/edit</h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+			</div>
+			<div class="modal-body" id="userFormContainer"></div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" type="button" id="submitEdit">Submit</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- JavaScript -->
+<script src="../../js/shiftGroup/main.js" th:src="@{/js/shiftGroup/main.js}"></script>
+</body>
+</html>
