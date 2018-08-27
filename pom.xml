@@ -116,8 +116,8 @@
         </repository>
         <repository>
             <id>central-mirror</id>
-            <!-- <url>http://hr-server.cn.workslan:8082/artifactory/remote-repos/</url>-->
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>http://hr-server.cn.workslan:8082/artifactory/remote-repos/</url>
+            <!-- <url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
         </repository>
     </repositories>
     <pluginRepositories>
@@ -133,8 +133,8 @@
         </pluginRepository>
         <pluginRepository>
             <id>central-mirror</id>
-            <!-- <url>http://hr-server.cn.workslan:8082/artifactory/remote-repos/</url>-->
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <url>http://hr-server.cn.workslan:8082/artifactory/remote-repos/</url>-->
+           <!--  <url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
         </pluginRepository>
     </pluginRepositories>
 </project>
