@@ -65,7 +65,7 @@ cache:
   script:
     - echo "Testing project with maven"
     #- 'mvn $MAVEN_CLI_OPTS verify'
-    -mvn test
+    - 'mvn test'
 
 # This is the name of the job.
 # You can choose it freely.
