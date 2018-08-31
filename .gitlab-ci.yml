@@ -50,8 +50,8 @@ stages:
   tags:
   - magicrp
   # - master
-  #image: maven:3.5.2-jdk-8-alpine
-  image: maven:3-jdk-8
+  image: maven:3.5.2-jdk-8-alpine
+  #image: maven:3-jdk-8
 
 # This will only validate and compile stuff and run e.g. maven-enforcer-plugin.
 # Because some enforcer rules might check dependency convergence and class duplications
