@@ -19,7 +19,7 @@
 # * Shows how to use multiple jobs in test stage for verifying functionality
 #   with multiple JDKs.
 # * Uses site:stage to collect the documentation for multi-module projects.
-# * Publishes the documentation for `master` branch.
+# * Publishes the documentation for `master` branch
 
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
