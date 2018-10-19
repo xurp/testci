@@ -72,7 +72,7 @@ stages:
   stage: test
   script:
   - echo "Testing project with maven"
-  - 'mvn $MAVEN_CLI_OPTS verify'
+  - 'mvn --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true verify'
 
 .maven-package: &maven-package
   stage: package
