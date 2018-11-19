@@ -19,7 +19,7 @@
 # * Shows how to use multiple jobs in test stage for verifying functionality
 #   with multiple JDKs.
 # * Uses site:stage to collect the documentation for multi-module projects.
-# * Publishes the documentation for `master` branch.
+# * Publishes the documentation for `master` branch
 
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
@@ -34,16 +34,24 @@ variables:
 # To keep cache across branches add 'key: "$CI_JOB_REF_NAME"'
 cache:
   paths:
-    - .m2/repository
+  - .m2/repository
 
-.maven_project: &maven_project_setup
+stages:
+- build
+- test
+- package
+- deploy
+
+.maven-project: &maven-project-setup
   # Since we require Maven for this job,
   # we can restrict the job to runners with a certain tag.
   # Of course, it is our duty to actually configure a runner
   # with the tag 'maven' and a working maven installation
   tags:
-    - maven
+  - magicrp
+  # - master
   image: maven:3.5.2-jdk-8-alpine
+  #image: maven:3-jdk-8
 
 # This will only validate and compile stuff and run e.g. maven-enforcer-plugin.
 # Because some enforcer rules might check dependency convergence and class duplications
@@ -55,24 +63,37 @@ cache:
   # Here you can execute arbitrate terminal commands.
   # If any of the commands returns a non zero exit code the job fails.
   script:
-    - echo "Building project with maven"
-    - 'mvn $MAVEN_CLI_OPTS test-compile'
+  - echo "Building project with maven"
+  - 'mvn --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true test-compile'
 
 # For merge requests do not `deploy` but only run `verify`.
 # See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 .verify: &verify
   stage: test
   script:
-    - echo "Testing project with maven"
-    - 'mvn $MAVEN_CLI_OPTS verify'
-    #- 'mvn test'
+  - echo "Testing project with maven"
+  - 'mvn --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true verify'
+
+.maven-package: &maven-package
+  stage: package
+  script:
+  - echo "Packaging project into jar"
+  - 'mvn --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true package' 
+  artifacts:
+    paths:
+    - target/*.jar
 
 # This is the name of the job.
 # You can choose it freely.
-maven_build:
-  <<: *maven_project_setup
+maven-build:
+  <<: *maven-project-setup
   <<: *validate
+  
 
-maven_test:
-  <<: *maven_project_setup
+maven-test:
+  <<: *maven-project-setup
   <<: *verify
+
+maven-package:
+  <<: *maven-project-setup
+  <<: *maven-package

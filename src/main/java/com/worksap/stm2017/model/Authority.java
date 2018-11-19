@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 
+
 /**
  * 权限.
  * 
