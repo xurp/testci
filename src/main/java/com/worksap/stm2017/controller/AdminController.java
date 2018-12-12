@@ -19,10 +19,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.worksap.stm2017.model.Shift;
 import com.worksap.stm2017.model.Type;
 import com.worksap.stm2017.model.User;
+import com.worksap.stm2017.mq.MQSender;
+import com.worksap.stm2017.mq.SeckillMessage;
 import com.worksap.stm2017.service.ShiftService;
 import com.worksap.stm2017.service.TypeService;
 import com.worksap.stm2017.service.UserService;
 import com.worksap.stm2017.vo.Menu;
+
 
 
 /**
@@ -42,12 +45,20 @@ public class AdminController {
 	@Autowired
 	private TypeService typeService;
 	
+	@Autowired
+    private MQSender mqSender;
+	
 	/**
 	 * 获取后台管理主页面
 	 * @return
 	 */
 	@GetMapping
 	public ModelAndView listUsers(Model model) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal(); 
+		mqSender.sendSeckillMessage(new SeckillMessage(1L,userDetails.getUsername()));
+		mqSender.send();
 		List<Menu> list = new ArrayList<>();
 		list.add(new Menu("user management", "/users"));
 		list.add(new Menu("set type(user group)", "/type"));
