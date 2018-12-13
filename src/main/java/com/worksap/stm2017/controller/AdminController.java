@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.worksap.stm2017.kafka.KafkaSender;
 import com.worksap.stm2017.model.Shift;
 import com.worksap.stm2017.model.Type;
 import com.worksap.stm2017.model.User;
@@ -48,17 +49,23 @@ public class AdminController {
 	@Autowired
     private MQSender mqSender;
 	
+	@Autowired
+	private KafkaSender kafkaSender;
+	
 	/**
 	 * 获取后台管理主页面
 	 * @return
 	 */
 	@GetMapping
 	public ModelAndView listUsers(Model model) {
+		//rabbitmq
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal(); 
 		mqSender.sendSeckillMessage(new SeckillMessage(1L,userDetails.getUsername()));
 		mqSender.send();
+		//kafka
+		kafkaSender.send();
 		List<Menu> list = new ArrayList<>();
 		list.add(new Menu("user management", "/users"));
 		list.add(new Menu("set type(user group)", "/type"));
