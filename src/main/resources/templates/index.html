@@ -54,6 +54,25 @@
 
     </div>
     <!-- /.row -->
+    <table class="table table-striped">
+			<thead>
+				<tr>
+				<th data-field="id">ID</th>
+					<th data-field="username">name</th>
+					
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:each="user : ${goodslist}">
+					<td th:text="${user.id}">1</td>
+					<td th:text="${user.name}">1</td>
+				</tr>
+
+			</tbody>
+
+		</table>
 
 </div>
 <!-- /.container -->

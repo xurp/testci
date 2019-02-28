@@ -3,6 +3,8 @@ package com.worksap.stm2017.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +54,8 @@ public class AdminController {
 	@Autowired
 	private KafkaSender kafkaSender;
 	
+	public Logger logger=LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * 获取后台管理主页面
 	 * @return
@@ -59,6 +63,7 @@ public class AdminController {
 	@GetMapping
 	public ModelAndView listUsers(Model model) {
 		//rabbitmq
+		logger.info("ADMIN日志");
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal(); 

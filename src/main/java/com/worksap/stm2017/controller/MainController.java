@@ -4,7 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -13,8 +21,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.worksap.stm2017.model.Authority;
+import com.worksap.stm2017.model.GoodsInfo;
 import com.worksap.stm2017.model.Person;
 import com.worksap.stm2017.model.User;
+import com.worksap.stm2017.repository.GoodsRepository;
 import com.worksap.stm2017.service.AuthorityService;
 import com.worksap.stm2017.service.PersonService;
 import com.worksap.stm2017.service.UserService;
@@ -54,6 +64,11 @@ public class MainController {
 		model.addAttribute("login", true);
 		model.addAttribute("getusername", userDetails.getUsername());		
 		}
+		save();
+		Pageable pageable = PageRequest.of(0, 100);
+		//注意：这里查商品，即使是商1也能查出来，因为是打分的
+    	List<GoodsInfo> list=goodsRepository.findByNameLike("商品", pageable).getContent();
+    	model.addAttribute("goodslist", list);
 		return "index";
 	}
 
@@ -98,5 +113,42 @@ public class MainController {
         userService.registerUser(user);
         return "redirect:/login";
     }
-	
+    
+    //ES测试
+    @Autowired
+    private GoodsRepository goodsRepository;
+
+    //http://localhost:8888/save
+    @GetMapping("save")
+    public String save(){
+        GoodsInfo goodsInfo = new GoodsInfo(System.currentTimeMillis(),
+                "商1"+System.currentTimeMillis(),"这是一个测试商1");
+        goodsRepository.save(goodsInfo);
+        return "index";
+    }
+
+    //http://localhost:8888/delete?id=1525415333329
+    @GetMapping("delete")
+    public String delete(long id){
+        goodsRepository.deleteById(id);
+        return "index";
+    }
+
+    //http://localhost:8888/update?id=1525417362754&name=修改&description=修改
+    @GetMapping("update")
+    public String update(long id,String name,String description){
+        GoodsInfo goodsInfo = new GoodsInfo(id,
+                name,description);
+        goodsRepository.save(goodsInfo);
+        return "index";
+    }
+
+    //http://localhost:8888/getOne?id=1525417362754
+    @GetMapping("getOne")
+    public GoodsInfo getOne(long id){
+        GoodsInfo goodsInfo = goodsRepository.findById(id).get();
+        return goodsInfo;
+    }
+
+
 }
