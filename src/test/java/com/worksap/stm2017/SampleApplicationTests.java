@@ -1,5 +1,7 @@
 package com.worksap.stm2017;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,11 @@ public class SampleApplicationTests {
 
     @Test
     public void contextLoads() {
+    }
+    
+    @Test
+    public void testSubtract() {
+        assertEquals(4, 4);
     }
 
 }

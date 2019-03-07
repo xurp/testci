@@ -67,9 +67,9 @@ public class MainController {
 		save();
 		Pageable pageable = PageRequest.of(0, 100);
 		//注意：这里查商品，即使是商1也能查出来，因为是打分的
-    	//List<GoodsInfo> list=goodsRepository.findByNameLike("商品", pageable).getContent();
+    	List<GoodsInfo> list=goodsRepository.findByNameLike("商品", pageable).getContent();
 		//要加*
-		List<GoodsInfo> list=goodsRepository.findByNameLike("*6759*", pageable).getContent();
+		//List<GoodsInfo> list=goodsRepository.findByNameLike("*6759*", pageable).getContent();
     	model.addAttribute("goodslist", list);
 		return "index";
 	}
@@ -124,7 +124,7 @@ public class MainController {
     @GetMapping("save")
     public String save(){
         GoodsInfo goodsInfo = new GoodsInfo(System.currentTimeMillis(),
-                "商1"+System.currentTimeMillis(),"这是一个测试商1");
+                "商品"+System.currentTimeMillis(),"这是一个正式商品");
         goodsRepository.save(goodsInfo);
         return "index";
     }
