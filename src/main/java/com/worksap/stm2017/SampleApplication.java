@@ -1,6 +1,8 @@
 package com.worksap.stm2017;
 
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +16,44 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SampleApplication {
+	private static String getSubDomainFromSuggestAPIUrl() {
+    String suggestAPIUrl="https://hrtommt-develop.hue.worksap.com";
+	String subDomain = suggestAPIUrl.substring(suggestAPIUrl.indexOf(".") + 1);
+    if (subDomain.indexOf("/") > -1) {
+        return subDomain.substring(0, subDomain.indexOf("/"));
+    } else {
+        return subDomain;
+    }
+	}
+	private static String getSubDomainFromSuggestAPIUrl2() throws Exception{
+	    String suggestAPIUrl="https://www.hrtommt-develop.hue.worksap.com/ss";
+	URI uri = new URI(suggestAPIUrl);
+    String domain = uri.getHost();
+    return domain.startsWith("www.") ? domain.substring(4) : domain;
+	}
+	private static String getSubDomainFromSuggestAPIUrl3(String uri) {
+        try {
+            URI suggestAPIUri = new URI(uri);
+            String domain = suggestAPIUri.getHost();
+            return domain.substring(domain.indexOf(".") + 1);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
     public static void main(String[] args) {
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://hrtommt-develop.hue.worksap.com/ss"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://hrtommt-develop.hue.worksap.com/ss"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://www.hrtommt-develop.hue.worksap.com/ss"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://www.hrtommt-develop.hue.worksap.com/ss"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://hrtommt-develop.hue.worksap.com/ss/s"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://hrtommt-develop.hue.worksap.com/ss/s"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://www.hrtommt-develop.hue.worksap.com/ss/s"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://www.hrtommt-develop.hue.worksap.com/ss/s"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://hrtommt-develop.hue.worksap.com"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://hrtommt-develop.hue.worksap.com"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("https://www.hrtommt-develop.hue.worksap.com"));
+    	System.out.println( getSubDomainFromSuggestAPIUrl3("http://www.hrtommt-develop.hue.worksap.com"));
     	System.out.println("http://127.0.0.1:8083/(paiban/)index");
     	System.out.println("需要开启es，MQ，zookeeper,kafka");
     	System.out.println(StringUtils.isEmpty(""));

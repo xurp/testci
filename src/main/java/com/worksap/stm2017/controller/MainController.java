@@ -70,6 +70,7 @@ public class MainController {
     	List<GoodsInfo> list=goodsRepository.findByNameLike("商品", pageable).getContent();
 		//要加*
 		//List<GoodsInfo> list=goodsRepository.findByNameLike("*6759*", pageable).getContent();
+    	//springbootES项目里的方法:List<User> firstNamesList = userElasticsearchRepository.getUsersByFirstNameContaining(query);
     	model.addAttribute("goodslist", list);
 		return "index";
 	}
